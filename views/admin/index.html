@@ -1,0 +1,62 @@
+<div class="row">
+  <div class="col-md-6">
+    <div
+      ba-panel
+      ba-panel-title="<i class='fab fa-dropbox'>&nbsp;</i> Auto-Backup to Dropbox"
+      ba-panel-class="with-scroll"
+      class="dropbox-backup-plugin"
+      >
+      <form name='form' ng-submit="open(url)">
+        <div class="row">
+          <div class="col-md-12">
+            <p>Auto-generate backup and upload to Dropbox.</p>
+            <div class="form-group" ng-class="{'has-error': $parent.access_token && form.$dirty && form.$invalid}">
+              <label>
+                Access Token:
+              </label>
+              <input type="text" ng-model="$parent.access_token" required class="form-control" placeholder="ybgvqA7kDawAAxxxxx......"/>
+              <span class="help-block">Refer to the demo video on how to obtain an <strong>Access Token</strong></span>
+            </div>
+
+            <div class="form-group" ng-class="{'has-error': $parent.time && form.$dirty && form.$invalid}">
+              <label>
+                Time:
+              </label>
+              <input type="time" ng-model="$parent.time" required class="form-control" placeholder="HH:mm AM/PM (e.g. 12:00 AM)"/>
+              <span class="help-block">Time of the day to run and upload the backup</span>
+            </div>
+
+            <div class="input-demo checkbox-demo padd-bottom">
+              <label class="checkbox-inline custom-checkbox nowrap">
+                <input type="checkbox" name="config" ng-model="backup.config">
+                <span>
+                  Backup Configurations
+                </span>
+              </label>
+            </div>
+        
+            <div class="input-demo checkbox-demo padd-bottom">
+              <label class="checkbox-inline custom-checkbox nowrap">
+                <input type="checkbox" name="config" ng-model="backup.database">
+                <span>
+                  Backup Database
+                </span>
+              </label>
+            </div>
+
+            <button ladda="submitting" class="btn btn-primary" type="submit">
+              Submit
+            </button>
+            &nbsp;&nbsp;
+            <a href="javascript:void(0)" ng-click="$parent.testSettings()" ng-show="$parent.hasValidConfig()">Test Settings</a>
+          </div>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <h3>Demo video on how to obtain <strong>Access Token</strong></h3>
+  </div>
+</div>
