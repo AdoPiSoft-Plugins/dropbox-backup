@@ -6,19 +6,19 @@
       ba-panel-class="with-scroll"
       class="dropbox-backup-plugin"
       >
-      <form name='form' ng-submit="open(url)">
+      <form name='form' ng-submit="$parent.updateSettings()">
         <div class="row">
           <div class="col-md-12">
             <p>Auto-generate backup and upload to Dropbox.</p>
-            <div class="form-group" ng-class="{'has-error': $parent.access_token && form.$dirty && form.$invalid}">
+            <div class="form-group" ng-class="{'has-error': !$parent.dropbox_access_token && form.$dirty && form.$invalid}">
               <label>
                 Access Token:
               </label>
-              <input type="text" ng-model="$parent.access_token" required class="form-control" placeholder="ybgvqA7kDawAAxxxxx......"/>
+              <input type="text" ng-model="$parent.dropbox_access_token" required class="form-control" placeholder="ybgvqA7kDawAAxxxxx......"/>
               <span class="help-block">Refer to the demo video on how to obtain an <strong>Access Token</strong></span>
             </div>
 
-            <div class="form-group" ng-class="{'has-error': $parent.time && form.$dirty && form.$invalid}">
+            <div class="form-group" ng-class="{'has-error': !$parent.time && form.$dirty && form.$invalid}">
               <label>
                 Time:
               </label>
@@ -28,7 +28,7 @@
 
             <div class="input-demo checkbox-demo padd-bottom">
               <label class="checkbox-inline custom-checkbox nowrap">
-                <input type="checkbox" name="config" ng-model="backup.config">
+                <input type="checkbox" name="config" ng-model="$parent.backup_config">
                 <span>
                   Backup Configurations
                 </span>
@@ -37,7 +37,7 @@
         
             <div class="input-demo checkbox-demo padd-bottom">
               <label class="checkbox-inline custom-checkbox nowrap">
-                <input type="checkbox" name="config" ng-model="backup.database">
+                <input type="checkbox" name="database" ng-model="$parent.backup_database">
                 <span>
                   Backup Database
                 </span>

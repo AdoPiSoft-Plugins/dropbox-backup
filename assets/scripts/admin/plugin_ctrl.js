@@ -8,54 +8,78 @@
     'CatchHttpError',
     '$q',
     function($http, toastr, CatchHttpError, $q) {
-      // this.open = function (url) {
-      //   return $http.get("/?url="+url).catch(function(){});
-      // }
-      // this.close = function(){
-      //   return $http.get("/exit-mini-browser").catch(function(){});
-      // }
+      this.get = function () {
+        return $http.get("/dropbox-backup/settings").catch(function(){});
+      }
+
+      this.update = function (data) {
+        return $http.post("/dropbox-backup/settings", data).catch(function(){});
+      }
+
+      this.testSettings = function () {
+        return $http.post("/dropbox-backup/test-settings").catch(function(){});
+      }
     }
   ])
 
-  App.controller('DropboxBackupPluginCtrl', function($scope, DropboxBackupService, toastr, CatchHttpError, $timeout, $ngConfirm){
-    // $scope.exit_url = window.location.origin+"/exit-mini-browser"
-    // $scope.browser;
-    // $scope.setDefaultUrl = function(){
-    //   if(!$scope.url){
-    //     $scope.url = "http://"
-    //   }
-    // }
+  App.controller('DropboxBackupPluginCtrl', function($scope, DropboxBackupService, SettingsSavedToastr, toastr, CatchHttpError, $timeout, $ngConfirm){
+    function formatAMPM(date) {
+      var hours = date.getHours();
+      var minutes = date.getMinutes();
+      var ampm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12;
+      hours = hours ? hours : 12; // the hour '0' should be '12'
+      minutes = minutes < 10 ? '0'+minutes : minutes;
+      var strTime = hours + ':' + minutes + ' ' + ampm;
+      return strTime;
+    }
 
-    // $scope.formatUrl = function(){
-    //   if(!$scope.url) return
-    //   if($scope.url == 'http://'){
-    //     $scope.url = ''
-    //   }
-    //   $scope.url = $scope.url.toLowerCase()
-    // }
+    function strTimeToDate(str) {
+      if(!str) return ""
+      str = str.trim()
+      var d = new Date()
+      try{
+        var [input, h, m, ampm] = str.match(/(\d+)\:(\d+)\s?(am|pm)/i)
+        if(m.match(/pm/i)){
+          h += 12
+        }
+        d.setHours(h)
+        d.setMinutes(m)
+        d.setSeconds(0)
+        d.setMilliseconds(0)
+      }catch(e){}
+      return d
+    }
 
-    // $scope.open = function(){
-    //   if($scope.browser && !$scope.browser.closed){
-    //     return $scope.browser.focus()
-    //   }
-    //   document.cookie = "mini_browser=true;path=/";
-    //   var url = new URL($scope.url)
-    //   DropboxBackupService.open($scope.url).finally(function(){
-    //     $scope.browser = window.open(url.pathname, '_blank');
-    //   })
-    // }
+    DropboxBackupService.get().then(function(resp){
+      var data = resp.data || {}
+      $scope.dropbox_access_token = data.dropbox_access_token
+      $scope.time = strTimeToDate(data.time)
+      $scope.backup_config = data.backup_config
+      $scope.backup_database = data.backup_database
+    })
 
-    // $scope.close = function(){
-    //   if(!confirm("Are you sure you want to close mini browser session?")) return;
-    //   return DropboxBackupService.close().finally(function(){
-    //     document.cookie = "mini_browser=; Max-Age=0;path=/";
-    //     if($scope.browser){
-    //       $scope.browser.close()
-    //     }
-    //     $scope.browser = null
-    //     $scope.url = ""
-    //   })
-    // }
+    $scope.updateSettings = function(){
+      return DropboxBackupService.update({
+        dropbox_access_token: $scope.dropbox_access_token,
+        backup_config: $scope.backup_config,
+        backup_database: $scope.backup_database,
+        time: formatAMPM($scope.time),
+      })
+      .then(SettingsSavedToastr)
+      .catch(CatchHttpError)
+    }
+
+    $scope.testSettings = function(){
+      return DropboxBackupService.testSettings().then(function(resp){
+        var data = resp.data
+        toastr.success(data.message)
+      }).catch(CatchHttpError)
+    }
+
+    $scope.hasValidConfig = function(){
+      return $scope.dropbox_access_token && $scope.time && ($scope.backup_config || $scope.backup_database)
+    }
   })
 
 })();
