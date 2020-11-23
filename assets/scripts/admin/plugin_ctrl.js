@@ -9,62 +9,60 @@
     '$q',
     function($http, toastr, CatchHttpError, $q) {
       this.get = function () {
-        return $http.get("/dropbox-backup/settings").catch(function(){});
+        return $http.get("/dropbox-backup/settings")
       }
 
       this.update = function (data) {
-        return $http.post("/dropbox-backup/settings", data).catch(function(){});
+        return $http.post("/dropbox-backup/settings", data)
       }
 
       this.testSettings = function () {
-        return $http.post("/dropbox-backup/test-settings").catch(function(){});
+        return $http.post("/dropbox-backup/test-settings")
       }
     }
   ])
 
   App.controller('DropboxBackupPluginCtrl', function($scope, DropboxBackupService, SettingsSavedToastr, toastr, CatchHttpError, $timeout, $ngConfirm){
-    function formatAMPM(date) {
-      var hours = date.getHours();
-      var minutes = date.getMinutes();
-      var ampm = hours >= 12 ? 'PM' : 'AM';
-      hours = hours % 12;
-      hours = hours ? hours : 12; // the hour '0' should be '12'
-      minutes = minutes < 10 ? '0'+minutes : minutes;
-      var strTime = hours + ':' + minutes + ' ' + ampm;
-      return strTime;
+    $scope.ampms = ['AM', 'PM'];
+    $scope.ampm = 'AM';
+    $scope.hours = [];
+    for (var h=0; h < 12; h++) {
+      $scope.hours.push(h+"");
+    }
+    $scope.mins = [];
+    for (var m=0; m < 60; m+=1) {
+      $scope.mins.push(m+"");
     }
 
-    function strTimeToDate(str) {
-      if(!str) return ""
-      str = str.trim()
-      var d = new Date()
-      try{
-        var [input, h, m, ampm] = str.match(/(\d+)\:(\d+)\s?(am|pm)/i)
-        if(m.match(/pm/i)){
-          h += 12
-        }
-        d.setHours(h)
-        d.setMinutes(m)
-        d.setSeconds(0)
-        d.setMilliseconds(0)
-      }catch(e){}
-      return d
+    $scope.setTime = function(){
+      var minute = $scope.minute+""
+      if(!minute.length)
+        minute = "00";
+      if(minute.length == 1)
+        minute += "0";
+
+      $scope.time = [$scope.hour, minute].join(":") + " " + $scope.ampm
     }
 
     DropboxBackupService.get().then(function(resp){
       var data = resp.data || {}
+      $scope.enable_auto_backup = data.enable_auto_backup
       $scope.dropbox_access_token = data.dropbox_access_token
-      $scope.time = strTimeToDate(data.time)
+      $scope.time = data.time
+      var input;
+      [input, $scope.hour, $scope.minute, $scope.ampm] = (data.time||"").match(/^(\d+)\s?\:\s?(\d+)\s?(am|pm)$/i)
+
       $scope.backup_config = data.backup_config
       $scope.backup_database = data.backup_database
     })
 
     $scope.updateSettings = function(){
       return DropboxBackupService.update({
+        enable_auto_backup: $scope.enable_auto_backup,
         dropbox_access_token: $scope.dropbox_access_token,
         backup_config: $scope.backup_config,
         backup_database: $scope.backup_database,
-        time: formatAMPM($scope.time),
+        time: $scope.time,
       })
       .then(SettingsSavedToastr)
       .catch(CatchHttpError)

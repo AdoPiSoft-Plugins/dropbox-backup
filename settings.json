@@ -1,1 +1,1 @@
-{"dropbox_access_token":"","backup_config":true,"backup_database":true,"time":"3:30 AM"}
+{"enable_auto_backup":true,"dropbox_access_token":"","backup_config":false,"backup_database":true,"time":"3:00 AM"}

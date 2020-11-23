@@ -11,5 +11,7 @@
   ],
   "author": "arnel.lenteria@gmail.com",
   "license": "ISC",
-  "dependencies": {}
+  "dependencies": {
+    "node-schedule": "^1.3.2"
+  }
 }

@@ -6,29 +6,55 @@
       ba-panel-class="with-scroll"
       class="dropbox-backup-plugin"
       >
-      <form name='form' ng-submit="$parent.updateSettings()">
+      <form name='form' ng-submit="$parent.updateSettings(); form.$setPristine()">
         <div class="row">
           <div class="col-md-12">
             <p>Auto-generate backup and upload to Dropbox.</p>
+            <div class="input-demo checkbox-demo padd-bottom">
+              <label class="checkbox-inline custom-checkbox nowrap">
+                <input type="checkbox" name="config" ng-model="$parent.enable_auto_backup">
+                <span>
+                  Enable
+                </span>
+              </label>
+            </div>
+
             <div class="form-group" ng-class="{'has-error': !$parent.dropbox_access_token && form.$dirty && form.$invalid}">
               <label>
-                Access Token:
+                Dropbox Access Token:
               </label>
-              <input type="text" ng-model="$parent.dropbox_access_token" required class="form-control" placeholder="ybgvqA7kDawAAxxxxx......"/>
+              <input type="text" ng-model="$parent.dropbox_access_token" required class="form-control" placeholder="ybgvqA7kDawAAxxxxx......" ng-disabled="!$parent.enable_auto_backup"/>
               <span class="help-block">Refer to the demo video on how to obtain an <strong>Access Token</strong></span>
             </div>
 
-            <div class="form-group" ng-class="{'has-error': !$parent.time && form.$dirty && form.$invalid}">
-              <label>
-                Time:
-              </label>
-              <input type="time" ng-model="$parent.time" required class="form-control" placeholder="HH:mm AM/PM (e.g. 12:00 AM)"/>
-              <span class="help-block">Time of the day to run and upload the backup</span>
-            </div>
+            <br/>
+            <div class="row">
+              <p style="margin-left:10px"><strong>Time of The Day {{$parent.time? "("+$parent.time+")":""}}</strong></p>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label>Hour:</label>
+                  <select class="form-control" ng-options="h as (h === 0? 12:h) for h in hours" ng-model="$parent.hour" ng-change="$parent.setTime()" ng-disabled="!$parent.enable_auto_backup"></select>
+                </div>
+              </div>
 
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label>Minute:</label>
+                  <select class="form-control" ng-options="m as m for m in mins" ng-model="$parent.minute" ng-change="$parent.setTime()" ng-disabled="!$parent.enable_auto_backup"></select>
+                </div>
+              </div>
+
+              <div class="col-md-2">
+                <div class="form-group">
+                  <label>&nbsp;</label>
+                  <select class="form-control" ng-options="ap for ap in ampms" ng-model="$parent.ampm" ng-change="$parent.setTime()" ng-disabled="!$parent.enable_auto_backup"></select>
+                </div>
+              </div>
+            </div>
+            <br/>
             <div class="input-demo checkbox-demo padd-bottom">
               <label class="checkbox-inline custom-checkbox nowrap">
-                <input type="checkbox" name="config" ng-model="$parent.backup_config">
+                <input type="checkbox" name="config" ng-model="$parent.backup_config" ng-disabled="!$parent.enable_auto_backup">
                 <span>
                   Backup Configurations
                 </span>
@@ -37,7 +63,7 @@
         
             <div class="input-demo checkbox-demo padd-bottom">
               <label class="checkbox-inline custom-checkbox nowrap">
-                <input type="checkbox" name="database" ng-model="$parent.backup_database">
+                <input type="checkbox" name="database" ng-model="$parent.backup_database" ng-disabled="!$parent.enable_auto_backup">
                 <span>
                   Backup Database
                 </span>
@@ -48,7 +74,7 @@
               Submit
             </button>
             &nbsp;&nbsp;
-            <a href="javascript:void(0)" ng-click="$parent.testSettings()" ng-show="$parent.hasValidConfig()">Test Settings</a>
+            <a href="javascript:void(0)" ng-click="$parent.testSettings()" ng-show="$parent.enable_auto_backup && $parent.hasValidConfig() && form.$pristine && form.$valid">Test Upload</a>
           </div>
         </div>
       </form>
