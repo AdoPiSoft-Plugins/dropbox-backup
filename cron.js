@@ -88,6 +88,10 @@ exports.uploadToDropbox = async(settings, zip_path)=>{
       })
     })
 
+    fs.unlink(zip_path, (err) => {
+      if (err) return
+    })
+
     system_logs.create("info", `Dropbox Backup: Successfully uploaded`).catch(console.log)
   }catch(e){
     system_logs.create("warn", `Dropbox Backup: Error while uploading to Dropbox`).catch(console.log)

@@ -31,7 +31,9 @@
     }
     $scope.mins = [];
     for (var m=0; m < 60; m+=1) {
-      $scope.mins.push(m+"");
+      var _m = m+""
+      if(m < 10) _m = "0"+_m;
+      $scope.mins.push(_m);
     }
 
     $scope.setTime = function(){
@@ -39,7 +41,7 @@
       if(!minute.length)
         minute = "00";
       if(minute.length == 1)
-        minute += "0";
+        minute = "0"+minute;
 
       $scope.time = [$scope.hour, minute].join(":") + " " + $scope.ampm
     }
