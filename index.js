@@ -2,7 +2,7 @@
 var router = require("./router")
 var cron = require("./cron.js")
 
-var { app } = require('../core')
+var { app } = require('plugin-core')
 
 module.exports = {
   async init(){

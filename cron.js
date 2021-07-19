@@ -1,6 +1,6 @@
 'use strict';
 
-var {machine_id, system_logs, backup} = require("../core")
+var {machine_id, system_logs, backup} = require("plugin-core")
 var path = require("path")
 var cfg_file = path.join(process.env.APPDIR, "plugins", "dropbox-backup", "settings.json")
 var { promisify } = require('util')

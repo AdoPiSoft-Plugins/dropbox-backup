@@ -1,5 +1,5 @@
 'use strict';
-var {machine_id} = require("../../core")
+var {machine_id} = require("plugin-core")
 var cron = require("../cron")
 var path = require("path")
 var cfg_file = path.join(process.env.APPDIR, "plugins", "dropbox-backup", "settings.json")

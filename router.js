@@ -1,5 +1,5 @@
 'use strict';
-var { router, middlewares } = require('../core')
+var { router, middlewares } = require('plugin-core')
 var settings_ctrl = require("./controllers/settings_ctrl")
 var { bodyParser } = middlewares
 
