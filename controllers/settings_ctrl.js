@@ -7,7 +7,7 @@ var { promisify } = require('util')
 var fs = require('fs')
 var writeFile = promisify(fs.writeFile)
 var readFile = promisify(fs.readFile)
-var script = path.join(process.env.APPDIR, "plugins", "dropbox-backup", "backup.sh")
+var script = path.join(__dirname, "..", "backup.sh")
 var {spawn} = require('child_process')
 
 exports.get = async(req, res, next)=>{
