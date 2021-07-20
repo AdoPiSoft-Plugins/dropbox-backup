@@ -2,7 +2,7 @@
 var {machine_id} = require("plugin-core")
 var cron = require("../cron")
 var path = require("path")
-var cfg_file = path.join(process.env.APPDIR, "plugins", "dropbox-backup", "settings.json")
+var cfg_file = process.env.NODE_ENV == 'development' ? path.join(process.env.APPDIR, 'tmp', 'dropbox-backup-creds.json') : path.join('/etc', 'dropbox-backup-creds.json')
 var { promisify } = require('util')
 var fs = require('fs')
 var writeFile = promisify(fs.writeFile)
