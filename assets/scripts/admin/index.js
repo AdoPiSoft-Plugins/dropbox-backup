@@ -4,7 +4,7 @@
   .config(function($stateProvider) {
     $stateProvider
     .state('plugins.dropbox_backup', {
-      templateUrl : "/plugins/dropbox-backup/views/admin/index.html",
+      templateUrl : "/public/plugins/dropbox-backup/views/admin/index.html",
       controller: 'DropboxBackupPluginCtrl',
       url: '/dropbox-backup-plugin',
       title: 'Dropbox Backup'
