@@ -52,7 +52,7 @@ exports.testSettings = async(req, res, next)=>{
         resp += data.toString()
       });
       exec.on('close', code => {
-        if(resp.match(/(content_hash|is_downloadable|\"name\")/gi))
+        if(resp && resp.match(/(content_hash|is_downloadable|\"name\")/gi))
           resolve(code)
         else reject(error+"\n"+resp)
       })
