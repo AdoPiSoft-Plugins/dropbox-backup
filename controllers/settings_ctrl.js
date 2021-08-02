@@ -34,7 +34,7 @@ exports.testSettings = async(req, res, next)=>{
   try{
     var settings = await readFile(cfg_file, 'utf8')
     var {dropbox_access_token, } = JSON.parse(settings);
-    var test_file = path.join(process.env.APPDIR, "plugins", "dropbox-backup", "test-file.txt")
+    var test_file = path.join(__dirname, "..", "test-file.txt")
     await new Promise((resolve, reject)=>{
       var exec = spawn(script, [machine_id, dropbox_access_token, test_file, 'it-works.txt'], {shell: true})
 
