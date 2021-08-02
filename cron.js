@@ -82,14 +82,15 @@ exports.uploadToDropbox = async(settings, zip_path)=>{
         resp += data.toString()
       });
       exec.on('close', code => {
-        fs.unlink(zip_path, console.log)
-        if(resp.match(/(content_hash|is_downloadable|\"name\")/gi))
+        if(resp.match(/(content_hash|is_downloadable|\"name\")/gi)){
+          system_logs.create("info", `Dropbox Backup: Successfully uploaded`).catch(console.log)
+          fs.unlink(zip_path, console.log)
           resolve(code)
+        }
         else reject(error+"\n"+resp)
       })
     })
 
-    system_logs.create("info", `Dropbox Backup: Successfully uploaded`).catch(console.log)
   }catch(e){
     system_logs.create("warn", `Dropbox Backup: Error while uploading to Dropbox`).catch(console.log)
     system_logs.create("critical", `Dropbox Backup: Error while uploading to Dropbox :\n${e.toString()}`).catch(console.log)
