@@ -54,7 +54,7 @@ exports.generateBackup = async(settings)=>{
   try{
     var {backup_config, backup_database} = settings
     var filename = await backup.createZip({config: backup_config, database: backup_database})
-    var zip_path = filename? path.join(process.env.APPDIR, `uploads`, filename) : ""
+    var zip_path = filename? path.join(process.env.APPDIR, 'public', 'backup', filename) : ""
     return zip_path
   }catch(e){
     system_logs.create("warn", `Dropbox Backup: Error while generating backup`).catch(console.log)
