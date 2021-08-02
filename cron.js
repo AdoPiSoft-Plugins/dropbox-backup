@@ -82,10 +82,7 @@ exports.uploadToDropbox = async(settings, zip_path)=>{
         resp += data.toString()
       });
       exec.on('close', code => {
-        fs.unlink(zip_path, (err) => {
-          if (err) return
-        })
-
+        fs.unlink(zip_path, console.log)
         if(resp.match(/(content_hash|is_downloadable|\"name\")/gi))
           resolve(code)
         else reject(error+"\n"+resp)
